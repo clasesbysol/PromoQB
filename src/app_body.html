@@ -27,6 +27,43 @@
 .hard li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 12px;font-size:.92rem}
 .hard .cnt2{font:700 .8rem var(--body);color:var(--bad);background:var(--bad-soft);border-radius:8px;padding:3px 8px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .hard .last{font-size:.75rem;color:var(--muted);white-space:nowrap}
+.f51wrap{margin:14px 0}
+.f51chips{margin-bottom:10px}
+.f51chips .chip{background:var(--panel)}
+.num{display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--bg);font:700 .75rem var(--body);margin-right:6px;padding:0 4px}
+.f51pair{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}
+.f51fig{background:var(--panel)}
+.f51fig figcaption{font:700 .85rem var(--body);color:var(--ink);text-align:left;padding:2px 4px 6px}
+.f51fig svg{max-height:470px !important}
+.f51cards .f51c{transition:border-color .2s,box-shadow .2s}
+.f51c.on{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.f51c h4{display:flex;align-items:center}
+.f51c p{margin-top:6px}
+.f51m{font-weight:600}
+.f51x{font-size:.9rem;color:var(--muted)}
+.xtag{display:inline-block;font:700 .64rem var(--body);letter-spacing:.05em;text-transform:uppercase;color:var(--t-g2);border:1px solid currentColor;border-radius:6px;padding:0 5px;margin-right:4px}
+svg.f51p,svg.f51h{width:100%;height:auto;display:block}
+.f51p .film{fill:#dcd6cf;stroke:#b9b0a6}
+.f51p .spot{fill:#1d1a1a}.f51p .stop{fill:#f4f0ea;stroke:#b9b0a6}
+.f51p .ln{fill:#5f5750;font:600 11px var(--body)}.f51p .ln.miss{fill:#c2185b;font-weight:800}
+.f51p .co{cursor:pointer}.f51p .co circle{fill:#2a1f2b;stroke:#fff;stroke-width:2}.f51p .co text{fill:#fff;font:700 12px var(--body)}
+.f51p .hl,.f51h .hl{opacity:0}
+@media (prefers-reduced-motion:no-preference){.f51p .hl,.f51h .hl{transition:opacity .25s}}
+.f51p[data-on="1"] .hl1,.f51p[data-on="2"] .hl2,.f51p[data-on="3"] .hl3,.f51p[data-on="4"] .hl4,.f51p[data-on="5"] .hl5,.f51p[data-on="6"] .hl6,
+.f51h[data-on="1"] .hl1,.f51h[data-on="2"] .hl2,.f51h[data-on="3"] .hl3,.f51h[data-on="4"] .hl4,.f51h[data-on="5"] .hl5,.f51h[data-on="6"] .hl6{opacity:1}
+.f51p .hlline{stroke:#c2185b;stroke-width:3;stroke-dasharray:7 5;fill:none}
+.f51p .hlthin{stroke:#c2185b;stroke-width:1.2;stroke-dasharray:3 4}
+.f51p .hlbr{stroke:#c2185b;stroke-width:2.5}
+.f51p .hlring{fill:none;stroke:#c2185b;stroke-width:2.5}
+.f51p .hlband{fill:rgba(194,24,91,.16);stroke:#c2185b;stroke-width:1.5}
+.f51p .dia{fill:rgba(194,24,91,.16);stroke:#c2185b;stroke-width:1.5;stroke-dasharray:5 3}
+.f51p .hlt{fill:#9c1250;font:700 13px var(--body);paint-order:stroke;stroke:#fff;stroke-width:3px}
+.f51h .strand{fill:none;stroke-width:6;stroke-linecap:round}.f51h .s1{stroke:var(--t-n)}.f51h .s2{stroke:var(--accent)}
+.f51h .rung{stroke:var(--muted);stroke-width:3}
+.f51h .hlline{stroke:var(--warn);stroke-width:4;stroke-linecap:round}
+.f51h .hlbr{stroke:var(--ink);stroke-width:2}.f51h .hlbr2{stroke:var(--ink);stroke-width:2;stroke-dasharray:5 4}
+.f51h .hlt{fill:var(--ink);font:700 13px var(--body);paint-order:stroke;stroke:var(--panel);stroke-width:4px}
+.stem svg.f51p{max-height:340px}
 .fig-wide{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px;margin:14px 0}
 .lands{width:100%;min-width:560px;max-width:820px;height:auto;display:block;margin:0 auto}
 .lands .hd{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}.lands .hdt{fill:var(--accent-strong);font:700 13px var(--body)}
@@ -150,6 +187,18 @@ function expandSection(sec){
     if(html!==esc(n.data)){const t=document.createElement("template");t.innerHTML=html;n.replaceWith(t.content)}});
 }
 const X=(str,s2)=>abbrExpand(esc(str),new Set(),s2||new Set(),String(str).toLowerCase());
+
+/* ---------- Foto 51 ---------- */
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-f51],.f51wrap .co");if(!t)return;
+  const wrap=t.closest(".f51wrap");if(!wrap)return;
+  let k=t.dataset.f51!==undefined?t.dataset.f51:t.dataset.k;
+  const cur=wrap.querySelector("svg.f51p").getAttribute("data-on");
+  if(k===cur)k="0";
+  wrap.querySelectorAll("svg.f51p,svg.f51h").forEach(s=>k==="0"?s.removeAttribute("data-on"):s.setAttribute("data-on",k));
+  wrap.querySelectorAll("[data-f51]").forEach(c=>c.setAttribute("aria-pressed",c.dataset.f51===k&&k!=="0"));
+  wrap.querySelectorAll(".f51c").forEach(c=>c.classList.toggle("on",c.dataset.n===k));
+});
 
 /* ---------- navegación ---------- */
 const VIEWS=["inicio","abrev","panel","g1","g2","l1","l2","n1","n2"];

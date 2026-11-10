@@ -1080,6 +1080,66 @@ M("N", "Ác. nucleicos I §3", "La complementaria de 5′-ATGCCA-3′, escrita 5
   ["5′-ATGCCA-3′", "Es la misma."],
   ["5′-UGGCAU-3′", "El ADN no tiene U."]
 ]);
+M("N", "Ác. nucleicos I §3 · Foto 51", "En este esquema de la Foto 51, ¿qué indica lo que está marcado?", [
+  ["Que la molécula es una hélice", "La cruz en X aparece porque los tramos de una hélice, vistos de costado, se inclinan hacia dos lados."],
+  ["Que hay dos cadenas", "Eso lo indica la 4.ª línea que falta, no la X."],
+  ["Que las bases están cada 3,4 Å", "Eso son las manchas fuertes arriba y abajo."],
+  ["Que el diámetro es de 20 Å", "Eso sale de qué tan lejos del eje están las primeras manchas."]
+], null, "f51_1");
+M("N", "Ác. nucleicos I §3 · Foto 51", "En este esquema de la Foto 51, ¿qué indican las manchas marcadas, arriba y abajo?", [
+  ["La separación de 3,4 Å entre bases apiladas", "Son las más lejanas del centro: la distancia más chica."],
+  ["Lo que mide una vuelta, 34 Å", "Eso es la separación entre filas, cerca del centro."],
+  ["El diámetro de la hélice", "Sale del ancho del patrón."],
+  ["La presencia de una segunda cadena", "Eso lo indica la 4.ª línea ausente."]
+], null, "f51_3");
+M("N", "Ác. nucleicos I §3 · Foto 51", "En este esquema de la Foto 51, ¿qué te dice la fila marcada?", [
+  ["Que hay dos cadenas desplazadas", "En la 4.ª fila lo que dispersa cada cadena se anula: falta esa línea."],
+  ["Que la hélice es levógira", "La foto no indica eso; la forma B es dextrógira."],
+  ["Que hay 4 pares de bases por vuelta", "Hay 10: las manchas de 3,4 Å caen en la fila 10."],
+  ["Que la muestra estaba mal hidratada", "No."]
+], null, "f51_4");
+M("N", "Ác. nucleicos I §3 · Foto 51", "En este esquema de la Foto 51, ¿qué indican las zonas vacías marcadas (los rombos)?", [
+  ["Que los fosfatos están afuera", "La mayor parte de los electrones está en el radio externo."],
+  ["Que hay dos cadenas", "Eso lo indica la 4.ª línea."],
+  ["Que la molécula no es una hélice", "La X dice que sí lo es."],
+  ["Que la muestra estaba dañada", "Es parte del patrón de una hélice con los fosfatos afuera."]
+], null, "f51_6");
+M("N", "Ác. nucleicos I §3 · Foto 51", "La separación entre las filas horizontales de manchas de la Foto 51 corresponde a:", [
+  ["Lo que mide una vuelta (34 Å)", "Las filas se repiten con la periodicidad de la hélice."],
+  ["La distancia entre bases (3,4 Å)", "Esas son las manchas del meridiano, en la fila 10."],
+  ["El diámetro de la hélice (20 Å)", "Sale de la distancia de las manchas al eje vertical."],
+  ["El largo total de la molécula", "Es una distancia que se repite, no el largo total."]
+]);
+M("N", "Ác. nucleicos I §3 · Foto 51", "Si una hélice tuviera vueltas más largas que las del ADN B, en su foto de difracción las filas de manchas estarían:", [
+  ["Más juntas", "Relación inversa: distancias grandes dan ángulos chicos."],
+  ["Más separadas", "Eso pasaría con vueltas más cortas."],
+  ["Igual que en la Foto 51", "Cambia la periodicidad, cambia el patrón."],
+  ["Todas sobre el eje vertical", "No."]
+]);
+M("N", "Ác. nucleicos I §3 · Foto 51", "Según la ley de Bragg (nλ = 2d·sen θ), una mancha muy lejos del centro de la foto corresponde a:", [
+  ["Una distancia chica en la molécula", "Ángulo grande ↔ d chica: por eso 3,4 Å aparece en los bordes."],
+  ["Una distancia grande en la molécula", "Es al revés."],
+  ["Una zona con más fosfato", "La posición indica distancias que se repiten."],
+  ["Un error de la película", "No."]
+]);
+M("N", "Ác. nucleicos I §3 · Foto 51", "Las manchas de 3,4 Å caen en la fila número 10 de la Foto 51. ¿Qué se deduce?", [
+  ["Que hay 10 pares de bases por vuelta", "34 Å ÷ 3,4 Å = 10."],
+  ["Que el diámetro es de 10 Å", "Es de unos 20 Å."],
+  ["Que hay 10 cadenas", "Hay dos."],
+  ["Que la vuelta mide 10 Å", "Mide 34 Å."]
+]);
+M("N", "Ác. nucleicos I §3 · Foto 51", "¿Por qué los brazos de la Foto 51 forman una X?", [
+  ["La hélice de costado es un zigzag", "Tramos inclinados hacia dos lados: cada dirección da una fila de manchas perpendicular."],
+  ["Porque hay dos cadenas cruzadas", "Una sola hélice ya da una X."],
+  ["Porque la fibra estaba cruzada", "Las fibras están alineadas."],
+  ["Porque las bases forman una cruz", "Las bases dan las manchas del meridiano."]
+]);
+M("N", "Ác. nucleicos I §3 · Foto 51", "Para que se anule justo la 4.ª línea, la segunda cadena está corrida 3/8 de vuelta. ¿Qué consecuencia estructural tiene?", [
+  ["Hay un surco mayor y uno menor", "Las cadenas no quedan equidistantes: 3/8 y 5/8 de vuelta."],
+  ["Las dos cadenas son paralelas", "Son antiparalelas; el desfase no cambia eso."],
+  ["La hélice es levógira", "No."],
+  ["Las bases quedan afuera", "Quedan adentro."]
+]);
 M("N", "Ác. nucleicos I §3", "En la Foto 51, ¿qué indica que hay dos cadenas?", [
   ["La ausencia de la 4.ª línea de manchas", "Las ondas de las dos cadenas se anulan ahí."],
   ["La cruz en forma de X", "Indica que es una hélice."],
