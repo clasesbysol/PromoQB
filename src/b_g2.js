@@ -218,9 +218,9 @@ M("GC", "Glúcidos II §3", "Testigo: 0,2 mL de glucosa 1 mM → A = 0,4 (Somogy
   ["2,0 y 2,0", "Eso sería glucosa 10 mM."]
 ], "Guía 4, problema 1");
 M("GC", "Glúcidos II §3", "Tras hidrolizar sacarosa, ¿qué mide cada técnica?", [
-  ["SN: glucosa + fructosa; Roe: solo fructosa", "Roe detecta cetohexosas."],
-  ["SN: solo la glucosa; Roe: solo la fructosa", "La fructosa también reduce en medio alcalino."],
-  ["Las dos miden solo la fructosa", "SN mide todo reductor."],
+  ["Somogyi–Nelson: glucosa + fructosa; Roe: solo fructosa", "Roe detecta cetohexosas."],
+  ["Somogyi–Nelson: solo la glucosa; Roe: solo la fructosa", "La fructosa también reduce en medio alcalino."],
+  ["Las dos miden solo la fructosa", "Somogyi–Nelson mide todo reductor."],
   ["Roe mide la sacarosa sin hidrolizar", "Detecta cetohexosas."]
 ], "Guía 4");
 M("GC", "Glúcidos II §3", "1 mol de celulosa tratado con periodato produce:", [

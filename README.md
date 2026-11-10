@@ -25,6 +25,7 @@ python3 build2.py    # arma promocional-qb.html y site/index.html
 cp site/index.html ../index.html
 ```
 
+- `abbr.js`: abreviaturas y su significado (se explican solas en la teoría y en las preguntas, y arman la pestaña Abreviaturas).
 - `bank.js`: preguntas. Se arma concatenando `b_g1.js`, `b_g2.js`, `b_l.js` y `b_n.js`. La primera opción de cada pregunta es la correcta; la página mezcla el orden al mostrarla.
 - `t_g.html`, `t_l.html`, `t_n.html`: teoría.
 - `app_head.html`, `app_body.html`: estilos, estructura y lógica de la página.

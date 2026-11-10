@@ -27,6 +27,12 @@
 .hard li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 12px;font-size:.92rem}
 .hard .cnt2{font:700 .8rem var(--body);color:var(--bad);background:var(--bad-soft);border-radius:8px;padding:3px 8px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .hard .last{font-size:.75rem;color:var(--muted);white-space:nowrap}
+.xp{font-weight:400;font-size:.86em;color:var(--muted)}
+h1 .xp,h2 .xp,h3 .xp,h4 .xp{font-family:var(--body);font-weight:500}
+.opt .lab .xp{font-weight:400}
+.gl h2{font:700 1.15rem var(--display);margin:26px 0 8px;color:var(--accent-strong)}
+.gl .tbl table{min-width:0}
+.gl td:first-child{font-weight:700;white-space:nowrap;width:1%}
 .legend2{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;color:var(--muted)}
 .legend2 i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
 </style>
@@ -34,7 +40,7 @@
 <nav class="nav"><div class="in gut">
   <button class="brand" type="button" data-go="inicio">QB <span>promo</span></button>
   <div class="tabs" id="tabs">
-    <a class="tab" href="#g1">Glúcidos I</a><a class="tab" href="#g2">Glúcidos II</a><a class="tab" href="#l1">Lípidos I</a><a class="tab" href="#l2">Lípidos II</a><a class="tab" href="#n1">Ác. nucleicos I</a><a class="tab" href="#n2">Ác. nucleicos II</a><a class="tab" href="#panel">Mi progreso</a>
+    <a class="tab" href="#g1">Glúcidos I</a><a class="tab" href="#g2">Glúcidos II</a><a class="tab" href="#l1">Lípidos I</a><a class="tab" href="#l2">Lípidos II</a><a class="tab" href="#n1">Ác. nucleicos I</a><a class="tab" href="#n2">Ác. nucleicos II</a><a class="tab" href="#abrev">Abreviaturas</a><a class="tab" href="#panel">Mi progreso</a>
   </div>
   <button class="go" type="button" data-go="preguntas">Preguntas</button>
 </div></nav>
@@ -47,6 +53,12 @@
   <div class="legend"><span><span class="bib">Solo bibliografía</span> aparece en capítulos de libros pero no en los Powers: está plegado y pesa menos.</span><span><span class="bib" style="color:var(--warn);background:var(--warn-soft)">¿entra?</span> metabolismo que está en el temario y en parciales viejos pero no en los Powers: está en la teoría, sin preguntas.</span></div>
   <div class="mods" id="modcards"></div>
   <div class="row" style="display:flex;gap:10px;flex-wrap:wrap"><button class="go" type="button" data-go="preguntas" style="font-size:1rem;padding:13px 22px">Practicar todas las preguntas</button><button class="pill" type="button" data-go="panel" style="padding:12px 18px">Ver mi progreso</button></div>
+</section>
+<section class="home gl" id="abrev">
+  <p class="kicker">Referencia</p>
+  <h1>Abreviaturas</h1>
+  <p class="lead" style="max-width:68ch">Las de métodos y reactivos se explican entre paréntesis cada vez que aparecen. Las de moléculas y enzimas, la primera vez en cada sección de la teoría y en cada pregunta.</p>
+  <div id="gltables"></div>
 </section>
 <section class="home panel" id="panel">
   <p class="kicker">Mi progreso</p>
@@ -115,8 +127,24 @@ const status=q=>{const a=st.answers[q.id];return a===undefined?"none":a===q.c?"o
 function molSvg(id){const m=MOL[id];return m?m.svg:""}
 function fillFigs(root){root.querySelectorAll("figure[data-mol]:not([data-done])").forEach(f=>{const m=MOL[f.dataset.mol];if(!m)return;f.innerHTML=m.svg+`<figcaption>${esc(m.name)}</figcaption>`;f.dataset.done=1})}
 
+/* ---------- abreviaturas ---------- */
+(function(){const groups={};ABBR.forEach(a=>{(groups[a[2]]=groups[a[2]]||[]).push(a)});
+  $("gltables").innerHTML=Object.entries(groups).map(([g,list])=>`<h2>${esc(g)}</h2><div class="tbl"><table>${list.slice().sort((x,y)=>x[0].localeCompare(y[0],"es")).map(a=>`<tr><td>${esc(a[0])}</td><td>${esc(a[1])}</td></tr>`).join("")}</table></div>`).join("")})();
+const BLOCK="p,li,td,th,h1,h2,h3,h4,summary,figcaption,.eq,.cd,.m,.e,.box,.unsure-note,div";
+function expandSection(sec){
+  if(sec.dataset.xp)return;sec.dataset.xp=1;
+  const walker=document.createTreeWalker(sec,NodeFilter.SHOW_TEXT|NodeFilter.SHOW_ELEMENT,{acceptNode:n=>{if(n.nodeType===1)return (n.tagName==="svg"||n.tagName==="SVG"||n.classList.contains("xp")||n.classList.contains("practice"))?NodeFilter.FILTER_REJECT:(n.tagName==="H2"?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP);return NodeFilter.FILTER_ACCEPT}});
+  const s1Map=new WeakMap();let s2=new Set();const todo=[];
+  while(walker.nextNode()){const n=walker.currentNode;if(n.nodeType===1){s2=new Set();continue}
+    if(!n.data.trim())continue;todo.push([n,s2])}
+  todo.forEach(([n,s2])=>{const blk=n.parentElement.closest(BLOCK)||sec;let s1=s1Map.get(blk);if(!s1){s1=new Set();s1Map.set(blk,s1)}
+    const html=abbrExpand(esc(n.data),s1,s2,(blk.textContent||"").toLowerCase());
+    if(html!==esc(n.data)){const t=document.createElement("template");t.innerHTML=html;n.replaceWith(t.content)}});
+}
+const X=(str,s2)=>abbrExpand(esc(str),new Set(),s2||new Set(),String(str).toLowerCase());
+
 /* ---------- navegación ---------- */
-const VIEWS=["inicio","panel","g1","g2","l1","l2","n1","n2"];
+const VIEWS=["inicio","abrev","panel","g1","g2","l1","l2","n1","n2"];
 $("modcards").innerHTML=MODS.map(([id,t,d,c])=>`<button class="mcard" type="button" data-go="${id}" style="--c:var(${c})"><b>${t}</b><span>${d}</span></button>`).join("");
 document.querySelectorAll(".mod").forEach(s=>{const t=s.dataset.topics;if(!t){s.insertAdjacentHTML("beforeend",`<div class="practice"><p>Este módulo no tiene preguntas en el banco porque no se sabe si entra.</p></div>`);return}s.insertAdjacentHTML("beforeend",`<div class="practice"><p>¿Listo para practicar este módulo?</p><button class="go" type="button" data-practice="${t}">Practicar ${esc(s.querySelector("h1").textContent.split("·")[0].trim())}</button></div>`)});
 let lastView="inicio";
@@ -128,7 +156,7 @@ function route(){
   document.querySelectorAll(".mod,.home").forEach(s=>s.classList.toggle("on",s.id===v));
   document.querySelectorAll(".tab").forEach(a=>a.setAttribute("aria-current",a.getAttribute("href")==="#"+v));
   if(v==="panel")renderPanel();
-  const sec=$(v);fillFigs(sec);window.scrollTo(0,0);
+  const sec=$(v);fillFigs(sec);if(sec.classList.contains("mod"))expandSection(sec);window.scrollTo(0,0);
   const cur=document.querySelector('.tab[aria-current="true"]');if(cur)cur.scrollIntoView({inline:"nearest",block:"nearest"});
 }
 addEventListener("hashchange",route);
@@ -149,7 +177,7 @@ function renderPanel(){
     `<div class="row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><button class="go" type="button" data-practice="${Object.keys(TOPICS).join(",")}" data-mode="wrong" ${by.bad+by.ns?"":"disabled"}>Repasar todas las erradas (${by.bad+by.ns})</button></div>`;
   const hard=qs.filter(q=>st.hist[q.id]&&st.hist[q.id].miss>0).sort((a,b)=>st.hist[b.id].miss-st.hist[a.id].miss||(status(b)!=="ok")-(status(a)!=="ok")).slice(0,15);
   $("phardnote").textContent=hard.length?"Ordenadas por cantidad de veces que las erraste o marcaste «No lo sé».":"Todavía no erraste ninguna. Cuando pase, aparecen acá.";
-  $("phard").innerHTML=hard.map(q=>{const h=st.hist[q.id];const s=status(q);return `<li><span class="cnt2">✗ ${h.miss}</span><span>${esc(q.q)}</span><span class="last">${s==="ok"?"ahora bien ✓":s==="ns"?"última: no sé":"última: mal"}</span></li>`}).join("");
+  $("phard").innerHTML=hard.map(q=>{const h=st.hist[q.id];const s=status(q);return `<li><span class="cnt2">✗ ${h.miss}</span><span>${X(q.q)}</span><span class="last">${s==="ok"?"ahora bien ✓":s==="ns"?"última: no sé":"última: mal"}</span></li>`}).join("");
 }
 $("preset").onclick=()=>{$("pconfirm").hidden=false};$("pno").onclick=()=>{$("pconfirm").hidden=true};
 $("pyes").onclick=()=>{st.answers={};st.hist={};st.pos=0;$("pconfirm").hidden=true;save();renderPanel()};
@@ -175,11 +203,12 @@ function cardHTML(q,idx,total){
   const T=TOPICS[q.t];const ans=answerOf(q);const done=ans!==undefined;const ord=optOrder(q);const img=q.o.some(o=>o[2]);
   const v=!done?"":ans===q.c?`<span class="verdict ok">✓ Correcta</span>`:ans===NS?`<span class="verdict ns">? No lo sabías</span>`:`<span class="verdict bad">✗ Incorrecta</span>`;
   let h=`<div class="meta"><span class="tag" style="--c:var(${T.c})">${T.name}</span>${q.s?`<span class="src">${esc(q.s)}</span>`:""}${q.b?`<span class="bib">Solo bibliografía</span>`:""}${v}<span class="qn">${idx+1}/${total}</span></div>`;
-  h+=`<p class="qtext">${esc(q.q)}</p>`;
+  const s2=new Set();
+  h+=`<p class="qtext">${X(q.q,s2)}</p>`;
   if(q.img)h+=`<div class="stem">${molSvg(q.img)}</div>`;
   h+=`<ol class="opts${img?" img":""}">`;
   ord.forEach((oi,k)=>{const [txt,why,mol]=q.o[oi];let cls=done?"done ":"";if(done){cls+=oi===q.c?"is-ok":(oi===ans?"is-bad":"dim")}
-    h+=`<li><button class="opt ${cls}" type="button" data-q="${q.id}" data-o="${oi}" ${done?"disabled":""}><span class="k">${"ABCD"[k]}</span><span>${mol?`<span class="pic">${molSvg(mol)}</span>`:""}<span class="lab">${esc(txt)}</span>${done&&why?`<span class="why">${esc(why)}</span>`:""}</span></button></li>`});
+    h+=`<li><button class="opt ${cls}" type="button" data-q="${q.id}" data-o="${oi}" ${done?"disabled":""}><span class="k">${"ABCD"[k]}</span><span>${mol?`<span class="pic">${molSvg(mol)}</span>`:""}<span class="lab">${X(txt,s2)}</span>${done&&why?`<span class="why">${X(why,s2)}</span>`:""}</span></button></li>`});
   h+=`</ol><div class="nsrow"><button class="opt ns ${done&&ans===NS?"is-ns":""}" type="button" data-q="${q.id}" data-o="${NS}" ${done?"disabled":""}><span class="k">?</span><span>No lo sé</span></button></div>`;
   h+=`<div class="ref">Repasar: <a href="#${T.mod}">${esc(q.r)}</a></div>`;
   return h;
