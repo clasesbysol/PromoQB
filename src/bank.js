@@ -795,6 +795,36 @@ M("L", "Lípidos I §3", "En el ciclo de Lands se cambia:", [
   ["La cabeza polar de sn-3", "Cambia cadenas, no cabezas."],
   ["El acilo de la ceramida", "Actúa sobre glicerofosfolípidos."]
 ]);
+M("L", "Lípidos I §3 · Ciclo de Lands", "Después de que la fosfolipasa A₂ actúa sobre una fosfatidilcolina, ¿qué queda?", [
+  ["Liso-PC y un ácido graso libre", "Se cortó el éster de sn-2; queda una sola cola."],
+  ["Ácido fosfatídico y colina libre", "Eso sería cortar la cabeza (lo haría una fosfolipasa D)."],
+  ["Diacilglicerol y fosfocolina", "Eso sería cortar del lado del fosfato (fosfolipasa C)."],
+  ["Glicerol-3-fosfato y dos ácidos grasos", "La PLA₂ corta una sola cadena."]
+]);
+M("L", "Lípidos I §3 · Ciclo de Lands", "En el segundo paso del ciclo de Lands, ¿de dónde sale la cadena nueva?", [
+  ["De un acil-CoA, vía una aciltransferasa", "Por ejemplo LPCAT para la PC: el ácido graso ya viene activado."],
+  ["De un ácido graso libre, sin activar", "Tiene que venir activado como acil-CoA."],
+  ["De la cadena de sn-1 de la misma molécula", "La sn-1 no se mueve."],
+  ["Del CDP-DAG de la síntesis de novo", "El CDP-DAG es de la síntesis, no del remodelado."]
+]);
+M("L", "Lípidos I §3 · Ciclo de Lands", "Una PC pasa por el ciclo de Lands. ¿Qué cambió al final?", [
+  ["Su especie molecular, no su clase", "Cambia la cadena de sn-2; la cabeza (colina) y la sn-1 siguen iguales."],
+  ["Su clase: pasó a ser otro fosfolípido", "La cabeza no cambia: sigue siendo PC."],
+  ["Su esqueleto: pasó a esfingosina", "El esqueleto sigue siendo glicerol."],
+  ["Las dos cadenas a la vez", "Solo cambia la de sn-2."]
+]);
+M("L", "Lípidos I §3 · Ciclo de Lands", "¿Por qué el PI de una célula puede terminar muy enriquecido en un tipo de cadena en sn-2?", [
+  ["Su aciltransferasa prefiere esa cadena", "Al repetirse el ciclo, la clase se enriquece en lo que la enzima elige."],
+  ["Porque la PLA₂ no corta al PI", "La PLA₂ corta en sn-2 en general."],
+  ["Porque el PI se fabrica solo con esa cadena", "De novo depende de los acil-CoA disponibles; el enriquecimiento viene del remodelado."],
+  ["Porque las cadenas pasan de sn-1 a sn-2", "Las cadenas no migran de posición."]
+]);
+M("L", "Lípidos I §3 · Ciclo de Lands", "La tafazina, cuya falla causa el síndrome de Barth, hace con la cardiolipina algo parecido al ciclo de Lands. ¿Qué hace?", [
+  ["Remodela sus cadenas", "Cambia las cadenas de la cardiolipina ya fabricada."],
+  ["Fabrica la cardiolipina desde cero", "Eso lo hace la vía del CDP-DAG."],
+  ["Le agrega colesterol", "La cardiolipina no lleva colesterol."],
+  ["La transporta a la membrana plasmática", "La cardiolipina es de la membrana mitocondrial interna."]
+]);
 M("L", "Lípidos I §3", "Una bacteria pasa de 37 °C a 15 °C. Su membrana tendrá:", [
   ["Más insaturaciones cis", "Y cadenas más cortas o ramificadas: recupera fluidez."],
   ["Más saturados y más largos", "Eso compensa el calor."],

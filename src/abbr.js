@@ -108,6 +108,7 @@ const ABBR = [
   ["GPAT", "glicerol-3-fosfato aciltransferasa", "Lípidos", 2],
   ["LPAAT", "ácido lisofosfatídico aciltransferasa", "Lípidos", 2],
   ["LPCAT", "lisofosfatidilcolina aciltransferasa", "Lípidos", 2],
+  ["LPIAT", "lisofosfatidilinositol aciltransferasa", "Lípidos", 2],
   ["SREBP", "proteína que se une al elemento regulador de esteroles", "Lípidos", 2],
   ["Tc", "temperatura de transición de fase", "Lípidos", 2],
   ["VLDL", "lipoproteína de muy baja densidad", "Lípidos", 2],
