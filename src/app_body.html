@@ -118,6 +118,28 @@
 @keyframes anPulse{50%{opacity:.25}}
 @media (prefers-reduced-motion:reduce){.anim .fr.on .new,.anim .fr.on .mv,.anim .fr.on .out,.anim .fr.on .grow,.anim .fr.on .pulse{animation-duration:.01s;animation-delay:0s}}
 /*/ANIMCSS*/
+/*RFCSS*/
+.rf{border:1px solid var(--line);border-radius:18px;padding:14px 16px 6px;margin:18px 0;background:var(--panel)}
+.rf h3{margin:2px 0 10px}
+.rf-q{font-weight:650;margin:10px 0 2px;line-height:1.4}
+.rf-tag{display:inline-block;font:800 .66rem var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--bad);border:1.5px solid var(--bad);border-radius:6px;padding:1px 6px;margin-right:8px;vertical-align:2px}
+.rf-ans{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
+.rf-ans span{font-size:.86rem;padding:4px 10px;border-radius:8px;line-height:1.35}
+.rf-ans .bad{background:var(--bad-soft);color:var(--bad)}.rf-ans .ok{background:var(--ok-soft);color:var(--ok);font-weight:650}
+.rf-body{border-top:1px dashed var(--line);margin-top:12px;padding-top:6px}
+h3.rf-sub{margin-top:26px;color:var(--accent-strong)}
+.anim .cap-hot{fill:var(--bad-soft);stroke:var(--bad);stroke-width:3}.anim .cap-cold{fill:var(--panel);stroke:var(--muted);stroke-width:2}
+.anim .dna-hot{fill:none;stroke:var(--bad);stroke-width:3.5}.anim .dna-cold{fill:none;stroke:var(--t-n);stroke-width:2.5}
+.anim .ph-tail{stroke:var(--muted);stroke-width:3}
+.anim .tube{fill:none;stroke:var(--ink);stroke-width:2}
+.anim .sup-hot{fill:var(--bad-soft)}.anim .sup-cold{fill:var(--sunk)}
+.anim .pel-hot{fill:var(--bad);stroke:var(--bad)}.anim .pel-cold{fill:var(--muted);fill-opacity:.5}
+.anim .lhead{fill:var(--t-n);fill-opacity:.35;stroke:var(--t-n);stroke-width:1.6}
+.anim .ltail{fill:none;stroke:var(--t-gm);stroke-width:2.2}.anim .ltail2{stroke:var(--t-gm);stroke-width:2.2}
+.anim .shape{fill:none;stroke:var(--accent);stroke-width:1.6;stroke-dasharray:5 4}
+.anim .pbox{fill:var(--panel);stroke:var(--line);stroke-width:2}.anim .pbox.hot{stroke:var(--bad);fill:var(--bad-soft)}
+/*/RFCSS*/
+
 /*STORYCSS*/
 .anim .bub{fill:var(--panel);stroke:var(--ink);stroke-width:1.6}
 .anim .bub-t{fill:var(--panel);stroke:var(--ink);stroke-width:1.6;stroke-linejoin:round}
@@ -242,7 +264,7 @@ h1 .xp,h2 .xp,h3 .xp,h4 .xp{font-family:var(--body);font-weight:500}
 <nav class="nav"><div class="in gut">
   <button class="brand" type="button" data-go="inicio">QB <span>promo</span></button>
   <div class="tabs" id="tabs">
-    <a class="tab" href="#g1">Glúcidos I</a><a class="tab" href="#g2">Glúcidos II</a><a class="tab" href="#l1">Lípidos I</a><a class="tab" href="#l2">Lípidos II</a><a class="tab" href="#n1">Ác. nucleicos I</a><a class="tab" href="#n2">Ác. nucleicos II</a><a class="tab" href="#n2s">Ác. nucleicos II · simple</a><a class="tab" href="#abrev">Abreviaturas</a><a class="tab" href="#panel">Mi progreso</a>
+    <a class="tab" href="#g1">Glúcidos I</a><a class="tab" href="#g2">Glúcidos II</a><a class="tab" href="#l1">Lípidos I</a><a class="tab" href="#l2">Lípidos II</a><a class="tab" href="#n1">Ác. nucleicos I</a><a class="tab" href="#n2">Ác. nucleicos II</a><a class="tab" href="#n2s">Ác. nucleicos II · simple</a><a class="tab" href="#rf">Repaso de falladas</a><a class="tab" href="#abrev">Abreviaturas</a><a class="tab" href="#panel">Mi progreso</a>
   </div>
   <button class="go" type="button" data-go="preguntas">Preguntas</button>
 </div></nav>
@@ -310,7 +332,7 @@ h1 .xp,h2 .xp,h3 .xp,h4 .xp{font-family:var(--body);font-weight:500}
 <script>
 /*__DATA__*/
 const TOPICS={G1:{name:"Glúcidos: estructura",c:"--t-g1",mod:"g1"},G2:{name:"Análisis de glicanos",c:"--t-g2",mod:"g2"},GC:{name:"Cálculos de glúcidos",c:"--t-gc",mod:"g2"},L:{name:"Lípidos y membranas",c:"--t-l",mod:"l1"},N:{name:"Ácidos nucleicos: estructura",c:"--t-n",mod:"n1"},NM:{name:"Ác. nucleicos II (lo que entra)",c:"--t-nm",mod:"n2s"}};
-const MODS=[["g1","Glúcidos I","Estructura, derivados, disacáridos, polisacáridos y GAG","--t-g1"],["g2","Glúcidos II","Glicoconjugados y análisis de glicanos · metabolismo marcado «¿entra?»","--t-g2"],["l1","Lípidos I","Ácidos grasos, clasificación, membranas","--t-l"],["l2","Lípidos II · ¿entra?","Lipoproteínas, β-oxidación, síntesis, cuerpos cetónicos (no está en los Powers)","--t-lm"],["n1","Ácidos nucleicos I","Componentes, experimentos, doble hélice, Tm","--t-n"],["n2","Ácidos nucleicos II","Versión completa: replicación, transcripción, traducción, nucleótidos","--t-nm"],["n2s","Ácidos nucleicos II · simple","Solo lo que entra, explicado simple. El cuestionario sale de acá","--t-nm"]];
+const MODS=[["g1","Glúcidos I","Estructura, derivados, disacáridos, polisacáridos y GAG","--t-g1"],["g2","Glúcidos II","Glicoconjugados y análisis de glicanos · metabolismo marcado «¿entra?»","--t-g2"],["l1","Lípidos I","Ácidos grasos, clasificación, membranas","--t-l"],["l2","Lípidos II · ¿entra?","Lipoproteínas, β-oxidación, síntesis, cuerpos cetónicos (no está en los Powers)","--t-lm"],["n1","Ácidos nucleicos I","Componentes, experimentos, doble hélice, Tm","--t-n"],["n2","Ácidos nucleicos II","Versión completa: replicación, transcripción, traducción, nucleótidos","--t-nm"],["n2s","Ácidos nucleicos II · simple","Solo lo que entra, explicado simple. El cuestionario sale de acá","--t-nm"],["rf","Repaso de falladas","Tus 68 errores del 11/11, explicados a fondo","--accent"]];
 const MODES={all:"Todas",new:"Sin responder",wrong:"Para repasar (mal o no sé)"};
 const NS=-1;
 const KEY="qb-promo-v4";
@@ -403,7 +425,7 @@ document.addEventListener("click",e=>{
   addEventListener("hashchange",()=>all.forEach(o=>o.stop()));
 })();
 /* ---------- navegación ---------- */
-const VIEWS=["inicio","abrev","panel","g1","g2","l1","l2","n1","n2","n2s"];
+const VIEWS=["inicio","abrev","panel","g1","g2","l1","l2","n1","n2","n2s","rf"];
 $("modcards").innerHTML=MODS.map(([id,t,d,c])=>`<button class="mcard" type="button" data-go="${id}" style="--c:var(${c})"><b>${t}</b><span>${d}</span></button>`).join("");
 document.querySelectorAll(".mod").forEach(s=>{const t=s.dataset.topics;if(!t){s.insertAdjacentHTML("beforeend",`<div class="practice"><p>Este módulo no tiene preguntas en el banco porque no se sabe si entra.</p></div>`);return}s.insertAdjacentHTML("beforeend",`<div class="practice"><p>¿Listo para practicar este módulo?</p><button class="go" type="button" data-practice="${t}">Practicar ${esc(s.querySelector("h1").textContent.split("·")[0].trim())}</button></div>`)});
 let lastView="inicio";
