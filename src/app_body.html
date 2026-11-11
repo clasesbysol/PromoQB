@@ -273,6 +273,10 @@ h1 .xp,h2 .xp,h3 .xp,h4 .xp{font-family:var(--body);font-weight:500}
   <h2>Las que más te cuestan</h2>
   <p class="note" id="phardnote"></p>
   <ol class="hard" id="phard"></ol>
+  <h2>Mandarle mis errores a Claude</h2>
+  <p class="note">Copia la lista de preguntas que erraste o marcaste «No lo sé» (alguna vez), con lo que elegiste y la respuesta correcta. Pegala en el chat con Claude para armar tu repaso.</p>
+  <div class="row" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="go" type="button" id="pexport">📋 Copiar mis errores</button><button class="mini" type="button" id="pdl">Descargar como .txt</button><span class="note" id="pexmsg" style="margin:0"></span></div>
+  <textarea id="pextxt" readonly hidden style="width:100%;min-height:180px;margin-top:10px;font:13px/1.45 ui-monospace,Menlo,monospace;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--sunk);color:var(--ink)"></textarea>
   <h2>Empezar de cero</h2>
   <div class="row" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="mini" type="button" id="preset">Borrar todo mi progreso</button><span class="confirm" id="pconfirm" hidden>¿Seguro? No se puede deshacer. <button class="mini hot" type="button" id="pyes">Sí, borrar</button><button class="mini" type="button" id="pno">Cancelar</button></span></div>
 </section>
@@ -436,6 +440,26 @@ function renderPanel(){
 }
 $("preset").onclick=()=>{$("pconfirm").hidden=false};$("pno").onclick=()=>{$("pconfirm").hidden=true};
 $("pyes").onclick=()=>{st.answers={};st.hist={};st.pos=0;$("pconfirm").hidden=true;save();renderPanel()};
+
+/* ---------- exportar errores ---------- */
+function errorsText(){
+  const plain=t=>String(t).replace(/<[^>]+>/g,"").replace(/\s+/g," ").trim();
+  const items=Q.filter(q=>{const s=status(q);return s==="bad"||s==="ns"||(st.hist[q.id]&&st.hist[q.id].miss>0)});
+  const d=new Date();let out=`ERRORES PROMO QB · ${d.toLocaleDateString("es-AR")} · ${items.length} preguntas\n`;
+  for(const [k,v] of Object.entries(TOPICS)){
+    const t=items.filter(q=>q.t===k);if(!t.length)continue;
+    out+=`\n=== ${v.name} (${t.length}) ===\n`;
+    t.forEach((q,i)=>{const a=st.answers[q.id];const s=status(q);const h=st.hist[q.id];
+      const mine=a===undefined?"(sin responder)":a===NS?"No lo sé":plain(q.o[a][0]);
+      out+=`\n${i+1}. [${q.r}] ${plain(q.q)}\n   Última respuesta: ${mine}${s==="ok"?" (ahora bien)":""}\n   Correcta: ${plain(q.o[q.c][0])}\n   Veces errada: ${h?h.miss:1} · id ${q.id}\n`});
+  }
+  return out;
+}
+$("pexport").onclick=async()=>{const t=errorsText();const ta=$("pextxt");ta.value=t;ta.hidden=false;let ok=false;
+  try{await navigator.clipboard.writeText(t);ok=true}catch(e){}
+  if(!ok){ta.focus();ta.select();try{ok=document.execCommand("copy")}catch(e){}}
+  $("pexmsg").textContent=ok?"¡Copiado! Pegalo en el chat con Claude.":"Seleccioná el texto de abajo y copialo a mano."};
+$("pdl").onclick=()=>{const t=errorsText();const b=new Blob([t],{type:"text/plain"});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download="mis-errores-qb.txt";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);$("pexmsg").textContent="Descargado: adjuntá el archivo en el chat."};
 
 /* ---------- preguntas ---------- */
 let snap=null;const retry={};
