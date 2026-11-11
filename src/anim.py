@@ -507,15 +507,42 @@ def tl_frames():
     return F
 
 # ================================================================ player HTML
+PHASES = {"pre": "Antes de empezar", "ini": "Iniciación", "elo": "Elongación", "ter": "Terminación",
+          "res": "Resultado", "euk": "Eucariotas", "pro": "Procesamiento (eucariotas)", "prep": "Preparación"}
+SHORT = {"pre": "Gen", "res": "Final", "euk": "Euc."}
+
+def phase_badge(ph):
+    txt = PHASES[ph].upper()
+    w = 26 + len(txt) * 8
+    return (f"<g class='an-badge ph-{ph}'><rect x='{786-w}' y='10' width='{w}' height='26' rx='13'/>"
+            f"<text x='{786-w/2}' y='28' text-anchor='middle'>{txt}</text></g>")
+
 def player(key, title, frames):
-    st_ = "".join(f.replace("class='fr'", "class='fr on'", 1) if i == 0 else f for i, (f, _, _) in enumerate(frames))
-    caps = "".join(f"<div class='an-cap{' on' if i == 0 else ''}'><h4><span class='n'>{i+1}</span>{t}</h4><p>{d}</p></div>"
-                   for i, (_, t, d) in enumerate(frames))
-    bar = "".join(f"<button type='button' data-i='{i}' aria-label='Paso {i+1}'><i></i></button>" for i in range(len(frames)))
+    ph = [f[3] if len(f) > 3 else None for f in frames]
+    svgs = []
+    for i, f in enumerate(frames):
+        sv = f[0]
+        if ph[i]: sv = sv[:sv.rindex("</svg>")] + phase_badge(ph[i]) + "</svg>"
+        if i == 0: sv = sv.replace("class='fr'", "class='fr on'", 1)
+        svgs.append(sv)
+    caps = ""
+    for i, f in enumerate(frames):
+        chip = f"<span class='an-pt ph-{ph[i]}'>{PHASES[ph[i]]}</span>" if ph[i] else ""
+        caps += f"<div class='an-cap{' on' if i == 0 else ''}'><h4><span class='n'>{i+1}</span>{f[1]}{chip}</h4><p>{f[2]}</p></div>"
+    bar = "".join(f"<button type='button' data-i='{i}' aria-label='Paso {i+1}'{(' class=\'ph-'+ph[i]+'\'') if ph[i] else ''}><i></i></button>" for i in range(len(frames)))
+    phs = ""
+    if any(ph):
+        groups = []
+        for i, x in enumerate(ph):
+            if groups and groups[-1][0] == x: groups[-1][2] += 1
+            else: groups.append([x, i, 1])
+        phs = "<div class='an-phs'>" + "".join(
+            f"<button type='button' data-i='{a}' class='ph-{x}' style='flex:{n} 1 0' title='{PHASES[x]}'>{PHASES[x] if n > 1 else SHORT.get(x, PHASES[x])}</button>"
+            for x, a, n in groups) + "</div>"
     return (f"<!--ANIM:{key}--><div class='anim' data-anim='{key}'>"
             f"<div class='an-top'><span class='an-ttl'>▶ {title}, paso a paso</span><span class='an-ct'>1 / {len(frames)}</span></div>"
-            f"<div class='an-stage'>{st_}</div>"
-            f"<div class='an-bar'>{bar}</div>"
+            f"<div class='an-stage'>{''.join(svgs)}</div>"
+            f"{phs}<div class='an-bar'>{bar}</div>"
             f"<div class='an-caps'>{caps}</div>"
             f"<div class='an-ctl'><button type='button' data-a='prev' aria-label='Anterior'>‹</button>"
             f"<button type='button' data-a='play' class='an-play'>▶ Reproducir</button>"
@@ -523,14 +550,122 @@ def player(key, title, frames):
             f"<button type='button' data-a='speed' class='an-sp'>Velocidad: normal</button></div>"
             f"</div><!--/ANIM:{key}-->\n")
 
+# ---------------------------------------------------------------- cuadros nuevos
+def rep_ter():
+    cx, cy = 400, 205
+    def pt(a, r): return cx + r * math.sin(math.radians(a)), cy - r * math.cos(math.radians(a))
+    def arc(a1, a2, r, sweep):
+        x1, y1 = pt(a1, r); x2, y2 = pt(a2, r)
+        large = 1 if abs(a2 - a1) > 180 else 0
+        return f"M{x1:.1f} {y1:.1f} A{r} {r} 0 {large} {sweep} {x2:.1f} {y2:.1f}"
+    b = (f"<circle cx='{cx}' cy='{cy}' r='135' class='s-old'/><circle cx='{cx}' cy='{cy}' r='105' class='s-old'/>" +
+         path(arc(0, 172, 120, 1), "s-new", True, .2, 2.2) + path(arc(0, -172, 120, 0), "s-new", True, .2, 2.2) +
+         T(cx, cy - 150, "ori (origen)", "lab") +
+         N(E(*pt(172, 120), 30, 30, "c1", "", "hex") + E(*pt(-172, 120), 30, 30, "c1", "", "hex"), 2.2) +
+         N(T(cx, cy + 170, "ter: acá se encuentran las dos horquillas", "lab"), 2.4) +
+         N(path(arc(25, 120, 158, 1), "arr") + arrow(*pt(116, 158), *pt(122, 158)) + T(*[round(v) for v in pt(70, 185)], "horquilla 1", "lab2", "start") +
+           path(arc(-25, -120, 158, 0), "arr") + arrow(*pt(-116, 158), *pt(-122, 158)) + T(*[round(v) for v in pt(-70, 185)], "horquilla 2", "lab2", "end"), .3) +
+         N(T(cx, cy - 4, "cromosoma", "lab2") + T(cx, cy + 14, "bacteriano", "lab2") + T(cx, cy + 32, "(circular)", "lab2"), .1) +
+         N(T(700, 300, "quedan 2 círculos", "lab2") + T(700, 318, "enganchados: una", "lab2") + T(700, 336, "topoisomerasa", "lab2") + T(700, 354, "los separa", "lab2"), 2.8))
+    return svg(b, "Terminación de la replicación")
+
+def tr_close():
+    x0, step = 130, 46
+    tpl = "TACCGAACC"; rna = "AUGGCUUGG"
+    o = [seg(x0 - 20, x0 + step * 8 + 60, 285, "s-mold"), T(x0 - 34, 290, "3′", "pol", "end"), T(x0 + step * 8 + 72, 290, "5′", "pol", "start")]
+    for i, c in enumerate(tpl):
+        o.append(T(x0 + step * i, 268, c, "seq"))
+    o.append(T(x0 - 34, 228, "5′", "pol", "end"))
+    for i, c in enumerate(rna):
+        x = x0 + step * i
+        o.append(N(T(x, 222, c, "seq rna") + L(x, 230, x, 250, "bp") + seg(x - step / 2 if i else x - 20, x + step / 2, 200, "s-rna"), .35 * i, 0, -50, .5))
+    xe = x0 + step * 8
+    o.append(N(T(xe + 34, 205, "3′-OH", "pol", "start"), 3.2))
+    o.append(f"<g class='ez c3'><rect x='{xe-110}' y='150' width='210' height='170' rx='60' style='fill-opacity:.1'/></g>" + T(xe - 5, 145, "ARN polimerasa", "lab"))
+    o.append(N(T(640, 90, "NTP", "lab") + arrow(640, 100, xe + 10, 185), 3.2))
+    o.append(N(small_lbl(660, 340, "sale PPi"), 3.5))
+    o.append(T(250, 90, "regla: A→U · T→A · G→C · C→G", "lab"))
+    o.append(T(250, 115, "molde (abajo) se lee 3′→5′ · ARN (arriba) crece 5′→3′", "lab2"))
+    o.append(N(arrow(150, 165, 330, 165) + T(240, 158, "el ARN crece por su 3′", "lab2"), 3.4))
+    return svg("".join(o), "Elongación de cerca")
+
+def small_lbl(x, y, t):
+    return T(x, y, t, "lab2")
+
+PH = {"rep": ["ini"] * 6 + ["elo"] * 5 + ["ter"] * 2,
+      "tr": ["pre"] + ["ini"] * 4 + ["elo"] * 2 + ["ter"] * 2 + ["res"] + ["euk"] + ["pro"] * 5,
+      "tl": ["prep"] * 3 + ["ini"] * 3 + ["elo"] * 5 + ["ter"] * 2}
+
+CAPS = {
+"rep": [
+("El origen", "La replicación arranca siempre en un sitio fijo, el <b>origen (ori)</b>. Proteínas iniciadoras lo reconocen y empiezan a abrir la doble hélice. En bacterias hay un solo origen; en eucariotas, muchos a lo largo de cada cromosoma."),
+("Burbuja y dos horquillas", "Al abrirse se forma una <b>burbuja</b> con una <b>horquilla</b> en cada punta. Las dos horquillas avanzan en sentidos opuestos: la replicación es <b>bidireccional</b>. Desde acá seguimos solo la de la derecha; la otra hace lo mismo, en espejo."),
+("Helicasa: separa las cadenas", "En cada horquilla se carga una <b>helicasa</b>, que rompe los puentes de hidrógeno entre las bases y separa las cadenas gastando ATP. Va a seguir trabajando durante toda la elongación, siempre en la punta."),
+("Topoisomerasa (girasa): alivia la tensión", "Abrir la hélice de un lado la retuerce más del otro: por delante de la horquilla se acumula <b>superenrollamiento</b>. Las <b>topoisomerasas</b> (en bacterias, la <b>girasa</b>) cortan, dejan girar y vuelven a sellar el ADN. Sin ellas, la horquilla se trabaría."),
+("Proteínas SSB: cuidan la cadena simple", "Las cadenas separadas tienden a volver a aparearse o a plegarse sobre sí mismas. Las <b>proteínas SSB</b> (de unión a cadena simple) las cubren y las mantienen estiradas, listas para ser copiadas."),
+("Primasa: el primer cebador", "La ADN polimerasa no puede empezar de cero: solo alarga un extremo <b>3′-OH</b> que ya exista. La <b>primasa</b> (una ARN polimerasa) arma un <b>cebador</b> corto de ARN. Con este primer cebador termina la iniciación."),
+("ADN pol III: hebra adelantada", "La <b>ADN polimerasa III</b> alarga el cebador: lee el molde 3′→5′ y sintetiza 5′→3′. En esta cadena eso coincide con el avance de la horquilla, así que la síntesis es <b>continua</b>, con un solo cebador: es la <b>hebra adelantada</b>."),
+("Hebra retrasada: un cebador nuevo", "El otro molde está al revés: para sintetizar 5′→3′ hay que ir <b>alejándose</b> de la horquilla. Se hace de a pedazos: cada vez que la horquilla abre un tramo nuevo, la primasa pone otro cebador. Es la <b>hebra retrasada</b>."),
+("ADN pol III: fragmento de Okazaki", "Una ADN polimerasa III alarga ese cebador hacia atrás hasta chocar con el pedazo anterior. Cada pedazo (cebador de ARN + ADN) es un <b>fragmento de Okazaki</b>. La hebra retrasada queda hecha de muchos fragmentos sueltos."),
+("ADN pol I: cambia ARN por ADN", "La <b>ADN polimerasa I</b> saca el cebador de ARN con su actividad <b>exonucleasa 5′→3′</b> y, a la vez, rellena el hueco con ADN (actividad polimerasa). Entre fragmentos queda una <b>mella</b>: falta un solo enlace fosfodiéster."),
+("ADN ligasa: sella la mella", "La <b>ADN ligasa</b> forma ese último <b>enlace fosfodiéster</b> y une los fragmentos: la hebra retrasada queda continua. El ciclo primasa → pol III → pol I → ligasa se repite una y otra vez mientras avanza la horquilla."),
+("Las horquillas se encuentran", "El cromosoma bacteriano es circular. Las dos horquillas salen del origen en sentidos opuestos y se encuentran del otro lado, en la región de <b>terminación (ter)</b>. Ahí se completa la copia y una topoisomerasa separa las dos moléculas, que quedaron enganchadas como eslabones." + bib("Región ter: bibliografía")),
+("Resultado: replicación semiconservativa", "Cada molécula hija tiene una cadena vieja (el molde) y una nueva: replicación <b>semiconservativa</b>. Orden para memorizar: helicasa → topoisomerasa → SSB → primasa → pol III → pol I → ligasa."),
+],
+"tr": [
+("El gen", "Antes del gen está el <b>promotor</b> (donde se pega la polimerasa) y al final el <b>terminador</b> (donde se suelta). El <b>+1</b> es la primera base que se copia. Solo una cadena sirve de <b>molde</b>; la otra se llama <b>codificante</b> porque tiene la misma secuencia que el ARN."),
+("La ARN polimerasa reconoce el promotor", "En bacterias hay una sola <b>ARN polimerasa</b>. Sola no sabe dónde empezar: su subunidad <b>σ (sigma)</b> reconoce el promotor y la ubica ahí. En eucariotas ese papel lo cumplen los <b>factores de transcripción</b>."),
+("Se abre una burbuja", "La polimerasa separa unas pocas bases alrededor del +1 y forma la <b>burbuja de transcripción</b>: queda expuesta la cadena molde. La propia polimerasa abre la hélice; no necesita helicasa." + bib()),
+("Primeros nucleótidos, sin cebador", "Frente al +1 se ubican los primeros ribonucleótidos (NTP: ATP, GTP, CTP y UTP) y se unen entre sí. A diferencia de la ADN polimerasa, la ARN polimerasa <b>no necesita cebador</b>: puede empezar de cero."),
+("Se suelta σ", "Cuando el ARN ya tiene unos pocos nucleótidos, <b>σ (sigma)</b> se suelta y puede volver a usarse. La enzima central deja el promotor: termina la iniciación y empieza la elongación." + bib("Detalle de bibliografía")),
+("Elongación: avanza la burbuja", "La polimerasa avanza por el gen llevando la burbuja. Lee el molde <b>3′→5′</b> y arma el ARN <b>5′→3′</b>. Un tramo corto del ARN queda apareado al molde (híbrido ARN-ADN) y el resto va saliendo. Detrás, el ADN se vuelve a cerrar."),
+("Elongación, de cerca", "Cada NTP que entra se aparea con la base del molde (A con T, U con A, G con C, C con G) y se une al <b>3′-OH</b> del ARN, liberando <b>PPi</b>. Por eso el ARN crece siempre por su extremo 3′. Donde el molde tiene A, el ARN pone <b>U</b>, no T."),
+("Fin (1): independiente de Rho", "Al copiar el <b>terminador</b>, el ARN forma una <b>horquilla</b>: una zona rica en G-C que se aparea consigo misma, seguida de varias U. La horquilla traba a la polimerasa, el apareamiento U-A (débil) se rompe y se sueltan el ARN y la polimerasa."),
+("Fin (2): dependiente de Rho", "En otros genes hace falta la proteína <b>Rho</b>: se engancha al ARN recién hecho, avanza por él hasta alcanzar a la polimerasa y la separa del molde."),
+("El ARN copia a la cadena codificante", "El ARN es complementario al molde, así que queda <b>igual a la cadena codificante</b>, solo que con U en lugar de T. Truco: para escribir el ARN, copiá la codificante y cambiá T por U."),
+("En eucariotas", "Los <b>factores de transcripción</b> reconocen el promotor y reclutan a la ARN polimerasa (para los ARNm, la II). Las fases son las mismas (iniciación, elongación, terminación), pero el producto es un <b>pre-ARNm</b> que hay que procesar." + bib("Pol II y caja TATA: bibliografía")),
+("Pre-ARNm", "El ARN recién hecho en eucariotas es un <b>pre-ARNm</b>: tiene <b>exones</b>, que quedan en el ARNm final, e <b>intrones</b>, que se cortan. Antes de salir del núcleo recibe 3 modificaciones."),
+("1.ª modificación: cap en el 5′", "Al extremo 5′ se le pone un <b>cap</b> de <b>7-metilguanosina</b>. Protege al ARNm de las enzimas que lo degradan y sirve para que el ribosoma lo reconozca al empezar la traducción."),
+("2.ª modificación: cola de poli(A) en el 3′", "Al extremo 3′ se le agrega una <b>cola de poli(A)</b>: muchas A seguidas, que estabilizan el ARNm."),
+("3.ª modificación: splicing", "El <b>espliceosoma</b> (proteínas + ARNsn) reconoce los bordes de cada intrón, lo corta y empalma los exones."),
+("ARNm maduro", "Queda el <b>ARNm maduro</b>: cap + 5′UTR + exones + 3′UTR + poli(A), listo para salir al citoplasma. Los UTR no se traducen; el 3′UTR regula cuánto dura el ARNm. Con <b>splicing alternativo</b>, un mismo pre-ARNm da distintos ARNm y proteínas (isoformas)."),
+],
+"tl": [
+("El mensaje: codones", "El ARNm se lee de a <b>3 bases (codones)</b>, de 5′ a 3′, sin saltear ni superponer. Empieza en <b>AUG</b> (que codifica Met) y termina en un <b>stop</b> (UAA, UAG o UGA), que no codifica ningún aminoácido. En bacterias, antes del AUG está la secuencia <b>Shine-Dalgarno</b>."),
+("Activación: cargar cada ARNt", "Antes de traducir hay que cargar cada ARNt con su aminoácido. Lo hace una <b>aminoacil-ARNt sintetasa</b> distinta para cada aminoácido, gastando <b>ATP</b> (sale AMP + PPi). El aminoácido queda pegado al extremo 3′ del ARNt."),
+("El ribosoma y sus sitios", "El ribosoma tiene dos subunidades de ARNr + proteínas: la <b>menor</b> (30S en bacterias, 40S en eucariotas) lee el ARNm y la <b>mayor</b> (50S / 60S) une los aminoácidos. En la mayor hay 3 sitios: <b>A</b> (entra el aminoacil-ARNt), <b>P</b> (está el que lleva la cadena) y <b>E</b> (salida)."),
+("Iniciación (1): subunidad menor", "La <b>subunidad menor</b> se une al ARNm cerca del inicio. En bacterias se aparea con la secuencia <b>Shine-Dalgarno</b> y queda justo sobre el AUG. En eucariotas se pega al <b>cap</b> y recorre el ARNm hasta el primer AUG. La ayudan factores de iniciación (IF)." + bib("Factores IF: bibliografía")),
+("Iniciación (2): ARNt iniciador en P", "Llega el <b>ARNt iniciador</b> con su anticodón <b>UAC</b> y se aparea con el AUG. Lleva <b>fMet</b> (formil-metionina) en bacterias y <b>Met</b> en eucariotas. Es el único ARNt que entra directo al sitio <b>P</b>: todos los demás entran por el A."),
+("Iniciación (3): llega la subunidad mayor", "Se une la <b>subunidad mayor</b> (con gasto de GTP) y queda el ribosoma completo: el iniciador en <b>P</b> y el sitio <b>A</b> libre, frente al segundo codón (GCU). Termina la iniciación."),
+("Elongación (1): entra al sitio A", "Entra al sitio <b>A</b> el aminoacil-ARNt cuyo anticodón encaja con el codón: para GCU, Ala-ARNt (anticodón CGA). Lo trae un factor de elongación con GTP. Si el anticodón no encaja, el ARNt se va sin entrar." + bib("EF-Tu: bibliografía")),
+("Elongación (2): enlace peptídico", "La <b>peptidil transferasa</b> forma el <b>enlace peptídico</b>: la cadena (por ahora solo fMet) pasa del ARNt de P al aminoácido del ARNt de A. Esta actividad la hace un <b>ARNr</b> de la subunidad mayor, no una proteína: el ribosoma es una <b>ribozima</b>."),
+("Elongación (3): translocación", "El ribosoma avanza <b>un codón</b> hacia 3′, gastando GTP. Todo se corre un lugar: el ARNt vacío pasa a <b>E</b>, el que lleva la cadena a <b>P</b>, y el sitio <b>A</b> queda libre frente al codón siguiente." + bib("EF-G: bibliografía")),
+("Elongación: el ciclo se repite", "El ARNt vacío sale por <b>E</b> y entra el siguiente al A (Trp-ARNt, anticodón ACC ↔ UGG). El ciclo se repite: <b>entrada al A → enlace peptídico → translocación</b>. Cada vuelta suma un aminoácido."),
+("Fin de la elongación: llega el stop", "Tras otra vuelta, la cadena fMet–Ala–Trp está en P y el sitio A queda frente a <b>UAA</b>. Ningún ARNt tiene anticodón para un stop. La proteína creció desde su extremo <b>N-terminal</b> (el primer aminoácido) hacia el <b>C-terminal</b>."),
+("Terminación: factor de liberación", "En el stop entra un <b>factor de liberación</b> (una proteína, no un ARNt). Se corta (hidroliza) la unión entre la cadena y el último ARNt, y la proteína se suelta."),
+("Terminación: se separa todo", "Las subunidades se separan del ARNm y se pueden volver a usar. La proteína se pliega y recibe <b>modificaciones postraduccionales</b>, distintas en eucariotas y procariotas."),
+]}
+
+def phased(key, frames):
+    out = []
+    for (sv, _, _), (t, d), p in zip(frames, CAPS[key], PH[key]):
+        out.append((sv, t, d, p))
+    assert len(frames) == len(CAPS[key]) == len(PH[key]), (key, len(frames), len(CAPS[key]), len(PH[key]))
+    return out
+
+def all_rep():
+    F = rep_frames(); F.insert(11, (rep_ter(), "", "")); return F
+def all_tr():
+    F = tr_frames(); F.insert(6, (tr_close(), "", "")); return F
+
 if __name__ == "__main__":
     s = open("t_n.html").read()
-    s = re.sub(r"<!--ANIM:(\w+)-->.*?<!--/ANIM:\1-->\n?", "", s, flags=re.S)
-    blocks = [("<h2>3. Transcripción</h2>", player("rep", "Replicación", rep_frames())),
-              ("<h2>4. Traducción</h2>", player("tr", "Transcripción", tr_frames())),
-              ("<h2>5. Metabolismo de nucleótidos</h2>", player("tl", "Traducción", tl_frames()))]
+    s = re.sub(r"<!--ANIM:(rep|tr|tl)-->.*?<!--/ANIM:\1-->\n?", "", s, flags=re.S)
+    blocks = [("<h2>3. Transcripción</h2>", player("rep", "Replicación", phased("rep", all_rep()))),
+              ("<h2>4. Traducción</h2>", player("tr", "Transcripción", phased("tr", all_tr()))),
+              ("<h2>5. Metabolismo de nucleótidos</h2>", player("tl", "Traducción", phased("tl", tl_frames())))]
     for anchor, html in blocks:
         assert s.count(anchor) == 1, anchor
         s = s.replace(anchor, html + anchor)
     open("t_n.html", "w").write(s)
-    print("ok", [len(f()) for f in (rep_frames, tr_frames, tl_frames)])
+    print("ok", len(all_rep()), len(all_tr()), len(tl_frames()))

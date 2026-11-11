@@ -118,6 +118,17 @@
 @keyframes anPulse{50%{opacity:.25}}
 @media (prefers-reduced-motion:reduce){.anim .fr.on .new,.anim .fr.on .mv,.anim .fr.on .out,.anim .fr.on .grow,.anim .fr.on .pulse{animation-duration:.01s;animation-delay:0s}}
 /*/ANIMCSS*/
+/*PHASECSS*/
+.anim .ph-pre{--pc:var(--muted)}.anim .ph-prep{--pc:var(--muted)}.anim .ph-ini{--pc:var(--t-l)}.anim .ph-elo{--pc:var(--t-g2)}
+.anim .ph-ter{--pc:var(--oxy)}.anim .ph-res{--pc:var(--ok)}.anim .ph-euk{--pc:var(--t-n)}.anim .ph-pro{--pc:var(--t-gc)}
+.an-phs{display:flex;gap:4px;margin:12px 2px -4px}
+.an-phs button{min-width:0;border:0;background:none;cursor:pointer;padding:4px 2px 0;border-top:4px solid var(--pc);color:var(--pc);font:800 .66rem var(--body);letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.an-bar button[class*="ph-"] i::after{background:var(--pc)}
+.an-pt{flex:none;margin-left:auto;font:800 .66rem var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--pc);border:1.5px solid var(--pc);border-radius:7px;padding:2px 7px}
+.anim .an-badge rect{fill:var(--pc);fill-opacity:.16;stroke:var(--pc);stroke-width:1.5}
+.anim .an-badge text{fill:var(--pc);font-size:12px;font-weight:800;letter-spacing:.08em}
+/*/PHASECSS*/
+
 /*METABCSS*/
 .anim .ch>*{fill:var(--c);stroke:color-mix(in srgb,var(--c) 62%,#000);stroke-width:2}
 .anim .chs>*{fill:var(--c);fill-opacity:.25;stroke:var(--c);stroke-width:2}
