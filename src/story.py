@@ -81,7 +81,7 @@ def v_rescate():
     b = (badge("Intestino") + plate + scissors(400, 230) + T(400, 285, "nucleasas", "enz-n") +
          say(250, 80, "Corto los ácidos nucleicos|de la comida.", (395, 190), D(0)) +
          N(nuc(620, 250, R=22) + nuc(700, 300, "k-amp", (("C6", "NH₂"),), R=20), D(1) - .3, -80) +
-         say(540, 110, "¡Nos soltaron!|Somos bases libres.", (630, 220), D(1)) +
+         say(540, 110, "¡Nos soltaron!|Somos bases libres.", (630, 220), D(1)) + N(T(660, 352, "bases libres", "lab"), D(1)) +
          N(T(400, 385, "Esta es la ruta principal de importación de bases.", "lab"), D(2)))
     F.append(frame(b, "Dieta", "Recuperación (1): de la dieta", "Al digerir la comida se rompen sus ácidos nucleicos y quedan <b>bases libres</b>. Esa digestión (hidrólisis extracelular) es la <b>ruta principal de importación</b> de bases y nucleótidos.", 2))
     rna = path("M90 260 C120 230 150 290 180 260 C210 230 240 290 270 260", "s-rna") + face(180, 240, .8, "sad")
@@ -89,7 +89,7 @@ def v_rescate():
          say(70, 110, "Ya cumplí mi función…|me van a desarmar.", (180, 235), D(0)) +
          N(arrow(300, 260, 420, 260), D(1) - .4) +
          N(nuc(500, 250, R=22) + nuc(600, 290, "k-ump", (("C6", "O"),), R=20) + pyr_char(690, 240, "k-ump", [("C2", "O"), ("C4", "O")], R=20), D(1) - .3, -60) +
-         say(470, 100, "Y nosotras quedamos libres|para que nos reciclen.", (560, 220), D(1)))
+         say(470, 100, "Y nosotras quedamos libres|para que nos reciclen.", (560, 220), D(1)) + N(T(600, 352, "bases libres", "lab"), D(1)))
     F.append(frame(b, "Recambio", "Recuperación (2): de adentro", "Las bases también salen de la <b>degradación de los ácidos nucleicos de la propia célula</b>, por ejemplo de ARN que ya cumplieron su función.", 2))
     b = (badge("Citosol") + nuc(130, 170, R=26) + T(140, 240, "base libre", "lab") +
          ribose(660, 175, p5=1, pp1=True) + face(660, 172, .6) + T(660, 222, "PRPP", "lab") +
@@ -98,15 +98,15 @@ def v_rescate():
          say(560, 40, "¡Te la doy yo!", (650, 150), D(1)) +
          say(450, 150, "Yo los junto.", (420, 105), D(2)) +
          N(nuc(400, 260, R=24, rib={"p5": 1}), D(3) - .4, 0, -30) +
-         say(470, 300, "¡Reciclado! Mucho más barato|que fabricarme de cero.", (430, 270), D(3)))
+         say(470, 300, "¡Reciclado! Mucho más barato|que fabricarme de cero.", (430, 270), D(3)) + N(T(330, 380, "nucleótido nuevo", "lab"), D(3)))
     F.append(frame(b, "Rescate", "Recuperación (3): se recicla", "En el rescate, a la base libre se le pega la ribosa-fosfato del <b>PRPP</b>. Para la hipoxantina y la guanina lo hace la enzima <b>HGPRT</b>. Sale un nucleótido nuevo, mucho más barato que fabricarlo de cero.", 4))
-    b = (N(nuc(200, 110, R=24), 0) + N(arrow(200, 165, 200, 215), .3) +
+    b = (N(nuc(200, 110, R=24) + T(285, 115, "una purina", "lab", "start"), 0) + N(arrow(200, 165, 200, 215), .3) +
          N(blob(200, 275, "k-uri", "ácido úrico", r=24, mood="flat"), D(1) - .4) +
          say(20, 20, "Si nadie me recicla…", (180, 85), D(0)) +
          say(250, 250, "Las purinas terminamos|como ácido úrico.", (225, 270), D(1)) +
-         N(pyr_char(600, 110, "k-ump", [("C2", "O"), ("C4", "O")], R=24) + arrow(600, 160, 600, 215), D(2) - .4) +
+         N(pyr_char(600, 110, "k-ump", [("C2", "O"), ("C4", "O")], R=24) + T(650, 115, "una pirimidina", "lab", "start") + arrow(600, 160, 600, 215), D(2) - .4) +
          N(blob(600, 275, "k-xmp", "β-ureidopropionato", r=24, mood="flat"), D(2) - .2) +
-         say(560, 210, "Y las pirimidinas,|como β-ureidopropionato.", (622, 262), D(2)))
+         say(648, 225, "Y las pirimidinas,|como β-ureido-|propionato.", (624, 268), D(2)))
     F.append(frame(b, "Degradación", "Si no se reciclan, se degradan", "Las bases que no se reutilizan se degradan: las <b>purinas</b> terminan en <b>ácido úrico</b> y las <b>pirimidinas</b> en <b>β-ureidopropionato</b>.", 3))
     return F
 
@@ -119,7 +119,8 @@ def v_estrategias():
     order = ["N9", "C4", "C5", "N7", "C8", "N3", "C6", "N1", "C2"]
     atoms = "".join(N(atom(*pp[a], a, src[a], 13), .8 + .25 * i, 0, -40, .5) for i, a in enumerate(order))
     bonds = N("".join(L(*pp[a], *pp[b], "rbond") for a, b in [("C6", "N1"), ("N1", "C2"), ("C2", "N3"), ("N3", "C4"), ("C4", "C5"), ("C5", "C6"), ("C5", "N7"), ("N7", "C8"), ("C8", "N9"), ("N9", "C4")]), 3.2)
-    b = (badge("Purinas (A y G)") + L(*pp["N9"], *c1, "bond") + ribose(*rc, p5=1) + bonds + atoms +
+    b = (badge("Purinas (A y G)") + L(*pp["N9"], *c1, "bond") + ribose(*rc, p5=1) + T(rc[0] + 60, rc[1] + 8, "PRPP", "lab", "start") + bonds + atoms +
+         N(T(400, 98, "anillo de purina en construcción", "lab2"), 1) +
          say(40, 260, "En las purinas yo estoy desde|el principio: ¡armen el anillo|encima mío!", (rc[0] - 10, rc[1] + 8), D(0) + 3) +
          say(560, 80, "Cada uno pone|sus átomos.", (470, 150), D(1) + 3))
     F.append(frame(b, "Purinas", "Purinas: el anillo se arma encima", "En las <b>purinas</b>, la ribosa-fosfato del PRPP está <b>desde el principio</b> y el anillo se arma encima, átomo por átomo. Los colores son de quien trae cada átomo: aminoácidos, THF y CO₂.", 2))
@@ -134,16 +135,16 @@ def v_estrategias():
     b = (badge("Pirimidinas (C, U y T)") + blob(110, 260, "k-co2", "carbamoil fosfato", r=24) + blob(110, 130, "k-asp", "aspartato", r=24) +
          say(150, 215, "Armamos el anillo|solos, sin ribosa.", (132, 255), D(0)) +
          say(150, 30, "¡Dale! Yo pongo|casi todo.", (125, 110), D(1)) +
-         N(ring_atoms(yp, set(ysrc), ysrc, bonds=PYR_B), D(1) + .6) +
+         N(ring_atoms(yp, set(ysrc), ysrc, bonds=PYR_B) + T(400, 268, "anillo de pirimidina", "lab"), D(1) + .6) +
          N(ribose(680, 260, p5=1, pp1=True) + face(680, 257, .6) + T(680, 308, "PRPP", "lab"), D(2) - .3, 80) +
          say(560, 120, "¿Ahora sí me necesitan?", (670, 230), D(2)) +
          say(470, 330, "¡Sí! Ahora dame la ribosa-fosfato.", (440, 230), D(3)))
     F.append(frame(b, "Pirimidinas", "Pirimidinas: anillo primero, ribosa después", "En las <b>pirimidinas</b> el anillo se arma <b>por separado</b>, con carbamoil fosfato y aspartato (es más simple). Recién después toma la ribosa-fosfato del <b>PRPP</b>.", 4))
     b = (f"<rect x='14' y='14' width='378' height='372' rx='18' class='pan'/><rect x='408' y='14' width='378' height='372' rx='18' class='pan'/>" +
          T(203, 48, "PURINAS", "ttl-a") + T(597, 48, "PIRIMIDINAS", "ttl-b") +
-         ribose(150, 290, p5=1) + face(150, 288, .55) + N(nuc(240, 170, R=26), .6, 0, -40) + T(150, 340, "1° ribosa", "lab") + T(260, 260, "2° anillo encima", "lab") +
-         pyr_char(530, 160, "k-ump", [("C2", "O"), ("C4", "O")], R=28) + T(530, 230, "1° anillo", "lab") +
-         N(ribose(690, 290, p5=1) + face(690, 288, .55) + T(690, 340, "2° ribosa", "lab"), 1, 60) +
+         ribose(150, 290, p5=1) + face(150, 288, .55) + N(nuc(240, 170, R=26), .6, 0, -40) + T(150, 340, "1° ribosa (PRPP)", "lab") + T(260, 260, "2° anillo de purina", "lab") +
+         pyr_char(530, 160, "k-ump", [("C2", "O"), ("C4", "O")], R=28) + T(530, 230, "1° anillo de pirimidina", "lab") +
+         N(ribose(690, 290, p5=1) + face(690, 288, .55) + T(690, 340, "2° ribosa (PRPP)", "lab"), 1, 60) +
          say(40, 70, "Yo llego al principio.", (140, 268), D(1)) +
          say(560, 70, "Yo llego al final.", (680, 268), D(2)))
     F.append(frame(b, "Comparación", "Para no confundirse", "<b>Purinas</b>: primero la ribosa y el anillo se arma encima. <b>Pirimidinas</b>: primero el anillo y la ribosa se pega al final.", 2))
@@ -172,25 +173,29 @@ def v_desoxi():
          say(270, 200, "Así como estoy no puedo entrar|al ADN: tengo un OH en el 2′.", (200, 270), D(0)) +
          say(270, 300, "Alguien me tiene que sacar el OH.", (205, 290), D(1)))
     F.append(frame(b, "No entra", "«Así no puedo entrar al ADN»", "Los nucleótidos se fabrican con <b>ribosa</b>, que tiene un OH en el carbono 2′. El ADN solo acepta <b>desoxirribosa</b> (sin ese OH).", 2))
-    b = (swap(nuc(140, 150, "k-gen", (), R=30, rib={"p5": 2, "hl2": True}, name="ADP"), nuc(140, 150, "k-gen", (), R=30, rib={"p5": 2, "deoxy": True, "hl2": True}, name="dADP"), D(2) - .3, 0) +
-         enzyme(420, 110, "ribonucleótido|reductasa") + blob(420, 300, "k-nadph", "NADPH", r=24) +
-         say(490, 40, "¡Yo te lo saco! Te reduzco:|de ribo a desoxi.", (445, 95), D(0)) +
-         say(480, 260, "Los electrones|los pongo yo.", (445, 290), D(1)) +
-         say(230, 330, "¡Ahora soy desoxi!", (200, 310), D(2)))
+    b = (nuc(100, 95, "k-gen", (), R=24, rib={"p5": 2, "hl2": True}, name="ADP (ribo)") +
+         N(arrow(150, 175, 215, 215), D(2) - .8) +
+         N(nuc(260, 240, "k-gen", (), R=24, rib={"p5": 2, "deoxy": True, "hl2": True}, name="dADP (desoxi)"), D(2) - .5, -30, -30) +
+         enzyme(470, 110, "ribonucleótido|reductasa") + blob(470, 300, "k-nadph", "NADPH", r=24) +
+         say(520, 25, "¡Yo te lo saco! Te reduzco:|de ribo a desoxi.", (495, 95), D(0)) +
+         say(530, 230, "Los electrones|los pongo yo.", (495, 290), D(1)) +
+         say(305, 180, "¡Ahora soy desoxi!", (280, 215), D(2)))
     F.append(frame(b, "Reductasa", "La ribonucleótido reductasa", "La <b>ribonucleótido reductasa</b> le saca el OH del 2′ (lo <b>reduce</b>, con electrones del NADPH). Así se pasa de ribo a desoxirribonucleótido.", 3))
-    b = (swap(pyr_char(140, 150, "k-ump", [("C2", "O"), ("C4", "O")], R=30, rib={"p5": 3, "deoxy": True}, name="dUTP", mood="o"),
-              pyr_char(140, 150, "k-ump", [("C2", "O"), ("C4", "O")], R=30, rib={"p5": 1, "deoxy": True}, name="dUMP"), D(2) - .3, 0) +
-         enzyme(470, 120, "dUTPasa") + helix(560, 300, 175, "ADN") +
-         say(230, 40, "¡Yo también quiero|entrar al ADN!", (175, 115), D(0)) +
-         say(510, 160, "¡No! El ADN no lleva U.|Te corto a dUMP.", (490, 140), D(1)) +
-         say(220, 300, "Bueno… así sirvo|para hacer timina.", (170, 280), D(2)))
+    b = (pyr_char(130, 95, "k-ump", [("C2", "O"), ("C4", "O")], R=24, rib={"p5": 3, "deoxy": True}, name="dUTP", mood="o") +
+         N(arrow(180, 180, 235, 225), D(2) - .8) +
+         N(pyr_char(280, 250, "k-ump", [("C2", "O"), ("C4", "O")], R=24, rib={"p5": 1, "deoxy": True}, name="dUMP"), D(2) - .5, -30, -30) +
+         enzyme(480, 120, "dUTPasa") + helix(570, 300, 175, "ADN") +
+         say(200, 15, "¡Yo también quiero|entrar al ADN!", (150, 68), D(0)) +
+         say(530, 150, "¡No! El ADN no lleva U.|Te corto a dUMP.", (505, 135), D(1)) +
+         say(335, 290, "Bueno… así sirvo|para hacer timina.", (308, 265), D(2)))
     F.append(frame(b, "dUTPasa", "La dUTPasa no deja pasar al dUTP", "La <b>dUTPasa</b> rompe el dUTP y deja <b>dUMP</b>. Así el dUTP queda casi en cero (no entra U al ADN) y el dUMP sirve para fabricar timina.", 3))
-    b = (swap(pyr_char(140, 150, "k-ump", [("C2", "O"), ("C4", "O")], R=30, rib={"p5": 1, "deoxy": True}, name="dUMP"),
-              pyr_char(140, 150, "k-dtmp", [("C2", "O"), ("C4", "O"), ("C5", "CH₃")], R=30, rib={"p5": 1, "deoxy": True}, name="dTMP (timina)"), D(2) - .3, 0) +
-         enzyme(450, 110, "timidilato sintasa") + blob(450, 300, "k-thf", "metilen-THF", r=24) +
-         say(510, 30, "Te pongo un metilo (CH₃)|en el carbono 5.", (475, 95), D(0)) +
-         say(510, 250, "El CH₃ lo traigo yo.", (475, 290), D(1)) +
-         say(240, 320, "¡Soy timina! Ahora sí entro al ADN.", (190, 300), D(2)))
+    b = (pyr_char(130, 95, "k-ump", [("C2", "O"), ("C4", "O")], R=24, rib={"p5": 1, "deoxy": True}, name="dUMP") +
+         N(arrow(180, 180, 235, 225), D(2) - .8) +
+         N(pyr_char(280, 250, "k-dtmp", [("C2", "O"), ("C4", "O"), ("C5", "CH₃")], R=24, rib={"p5": 1, "deoxy": True}, name="dTMP (timina)"), D(2) - .5, -30, -30) +
+         enzyme(480, 110, "timidilato sintasa") + blob(660, 300, "k-thf", "metilen-THF", r=24) +
+         say(520, 25, "Te pongo un metilo (CH₃)|en el carbono 5.", (500, 95), D(0)) +
+         say(560, 200, "El CH₃ lo traigo yo.", (650, 275), D(1)) +
+         say(345, 290, "¡Soy timina!|Ahora sí entro al ADN.", (318, 268), D(2)))
     F.append(frame(b, "Timidilato sintasa", "La timidilato sintasa hace la timina", "La <b>timidilato sintasa</b> le pone un metilo al dUMP (el carbono lo trae el metilen-THF) y forma <b>dTMP</b>, la timina del ADN.", 3))
     cell = "<circle cx='640' cy='280' r='62' class='bad-cell'/>" + face(640, 275, 1.4, "sad")
     b = (pyr_char(140, 150, "k-alo", [("C2", "O"), ("C4", "O"), ("C5", "F")], R=30, rib={"p5": 1, "deoxy": True}, name="5-fluorouracilo", look=1) +
@@ -200,13 +205,13 @@ def v_desoxi():
          say(250, 300, "Sin dTMP no copio mi ADN|y no me puedo dividir.", (585, 285), D(2)))
     F.append(frame(b, "5-FU", "El 5-fluorouracilo", "El <b>5-fluorouracilo</b> bloquea la timidilato sintasa. Sin dTMP no se puede copiar el ADN, así que frena a las células que se dividen mucho, como las del cáncer.", 3))
     g = nuc(150, 140, "k-gua", (("C6", "O"), ("C2", "NH₂")), R=26)
-    b = (g + T(160, 210, "G", "sg-t") + L(225, 140, 290, 140, "bp") +
-         swap(pyr_char(360, 140, "k-ctp", [("C2", "O"), ("C4", "NH₂")], R=30, name="citosina"),
-              pyr_char(360, 140, "k-ump", [("C2", "O"), ("C4", "O")], R=30, name="uracilo", mood="o"), D(1) + .3, 0) +
-         say(450, 40, "Estoy feliz con mi G.", (390, 105), D(0)) +
-         say(450, 150, "¡Ay! Se me fue el NH₂…|(desaminación espontánea)", (395, 150), D(1)) +
-         say(380, 290, "Ahora soy un uracilo…|y me pego con A.", (370, 220), D(2)) +
-         N(T(400, 385, "Esto le pasa a miles de citosinas por día en cada célula.", "lab2"), D(2)))
+    b = (g + T(160, 210, "guanina (G)", "lab") + L(225, 140, 290, 140, "bp") +
+         pyr_char(360, 140, "k-ctp", [("C2", "O"), ("C4", "NH₂")], R=30, name="citosina") +
+         say(450, 30, "Estoy feliz con mi G.", (392, 100), D(0)) +
+         say(450, 110, "¡Ay! Se me va el NH₂…|(desaminación espontánea)", (397, 135), D(1)) +
+         N(arrow(410, 200, 565, 255), D(2) - .8) +
+         N(pyr_char(620, 270, "k-ump", [("C2", "O"), ("C4", "O")], R=28, name="uracilo", mood="o"), D(2) - .5, -40, -30) +
+         say(330, 320, "Ahora soy un uracilo…|y me pego con A.", (585, 300), D(2)))
     F.append(frame(b, "Desaminación", "¿Por qué T y no U? (1)", "La <b>citosina se desamina sola</b> (pierde su NH₂) y se convierte en uracilo. Pasa todo el tiempo, en miles de bases por día.", 3))
     b = (enzyme(400, 120, "reparadora", mood="o") +
          pyr_char(150, 140, "k-ump", [("C2", "O"), ("C4", "O")], R=26) + T(150, 205, "¿U original?", "lab") +
@@ -216,7 +221,7 @@ def v_desoxi():
          say(290, 330, "¡Mutación!", (400, 310), D(1) + 1))
     F.append(frame(b, "Sin T", "¿Por qué T y no U? (2)", "Si el ADN usara U normalmente, la célula <b>no podría distinguir</b> una U legítima de una C dañada. Sin corregirla, en la siguiente replicación el par <b>G-C pasaría a A-T</b>: una mutación.", 2))
     b = (pyr_char(130, 140, "k-dtmp", [("C2", "O"), ("C4", "O"), ("C5", "CH₃")], R=30, name="timina") +
-         O(pyr_char(420, 300, "k-ump", [("C2", "O"), ("C4", "O")], R=24, mood="o"), D(1) + .8, 120, 60) +
+         O(pyr_char(420, 290, "k-ump", [("C2", "O"), ("C4", "O")], R=22, mood="o", name="uracilo"), D(1) + .8, 120, 60) +
          enzyme(420, 120, "uracilo-ADN|glicosilasa") + enzyme(680, 270, "reparación", k="k-enz2") +
          say(200, 10, "Yo soy uracilo + CH₃:|mi metilo es la etiqueta de original.", (155, 100), D(0)) +
          say(525, 30, "Entonces toda U en el ADN|es un error. ¡Afuera!", (445, 95), D(1)) +
@@ -233,24 +238,26 @@ def v_desoxi():
 # ================================================================== VIDEO 4: gota
 def v_gota():
     F = []
-    b = (swap(nuc(150, 160, R=30, name="hipoxantina"), nuc(150, 160, "k-xan", (("C6", "O"), ("C2", "O")), R=30, name="xantina"), D(2) - .3, 0) +
-         enzyme(470, 120, "xantina oxidasa") +
-         say(230, 20, "Si nadie me recicla,|me degradan…", (175, 120), D(0)) +
-         say(540, 30, "Yo te oxido:|pasás a xantina.", (492, 100), D(1)) +
-         N(T(150, 290, "+1 oxígeno", "lab2"), D(2)))
+    b = (nuc(120, 120, R=28, name="hipoxantina") +
+         N(arrow(175, 185, 245, 235) + T(240, 200, "+1 O", "lab2", "start"), D(2) - .8) +
+         N(nuc(300, 265, "k-xan", (("C6", "O"), ("C2", "O")), R=28, name="xantina"), D(2) - .5, -30, -30) +
+         enzyme(520, 120, "xantina oxidasa") +
+         say(200, 15, "Si nadie me recicla,|me degradan…", (145, 85), D(0)) +
+         say(560, 25, "Yo te oxido:|pasás a xantina.", (540, 98), D(1)))
     F.append(frame(b, "Xantina", "Degradación (1): hipoxantina → xantina", "Una purina que no se recicla se degrada. La <b>xantina oxidasa</b> oxida la hipoxantina a <b>xantina</b>.", 2))
-    b = (swap(nuc(150, 160, "k-xan", (("C6", "O"), ("C2", "O")), R=30, name="xantina"),
-              nuc(150, 160, "k-uri", (("C6", "O"), ("C2", "O"), ("C8", "O")), R=30, name="ácido úrico", mood="flat"), D(1) + .3, 0) +
-         enzyme(470, 120, "xantina oxidasa") +
-         say(540, 30, "Y a vos también:|ahora sos ácido úrico.", (492, 100), D(0)) +
-         say(250, 250, "Soy poco soluble en agua…", (205, 185), D(1) + .6))
+    b = (nuc(120, 120, "k-xan", (("C6", "O"), ("C2", "O")), R=28, name="xantina") +
+         N(arrow(175, 185, 245, 235) + T(240, 200, "+1 O", "lab2", "start"), D(1) - .6) +
+         N(nuc(300, 265, "k-uri", (("C6", "O"), ("C2", "O"), ("C8", "O")), R=28, name="ácido úrico", mood="flat"), D(1) - .3, -30, -30) +
+         enzyme(520, 120, "xantina oxidasa") +
+         say(560, 25, "Y a vos también:|ahora sos ácido úrico.", (540, 98), D(0)) +
+         say(430, 290, "Soy poco soluble en agua…", (402, 280), D(1) + .6))
     F.append(frame(b, "Ácido úrico", "Degradación (2): xantina → ácido úrico", "La misma <b>xantina oxidasa</b> pasa la xantina a <b>ácido úrico</b>. En humanos el camino termina acá, y el ácido úrico es <b>poco soluble</b>.", 2))
     b = (nuc(150, 170, "k-uri", (("C6", "O"), ("C2", "O"), ("C8", "O")), R=28, name="ácido úrico", mood="flat") + kidney(560, 200) + T(560, 290, "riñón", "lab") +
          N(arrow(230, 170, 480, 190), .3) +
          say(560, 30, "Lo saco por la orina.", (565, 140), D(0)) +
          say(240, 260, "Siempre que no seamos demasiados…", (200, 185), D(1)))
     F.append(frame(b, "Riñón", "El ácido úrico sale por el riñón", "El ácido úrico viaja por la sangre y el <b>riñón</b> lo elimina por la orina.", 2))
-    b = (toe(260, 230) + xtals(440, 255) +
+    b = (toe(260, 230) + xtals(440, 255) + T(500, 285, "cristales de urato", "lab2", "start") + T(330, 345, "dedo gordo del pie", "lab2") +
          N(P("<circle cx='450' cy='262' r='38' class='hlc'/>"), .3) +
          say(470, 70, "¡Somos tantos que nos|hicimos cristales!", (455, 240), D(0)) +
          say(40, 110, "¡Ay! Me duele|y se me inflama.", (330, 250), D(1)) +
@@ -259,7 +266,7 @@ def v_gota():
     b = (nuc(140, 160, "k-alo", R=30, name="alopurinol", look=1) + enzyme(450, 140, "xantina oxidasa", mood="o") +
          say(200, 20, "Me parezco a la hipoxantina…", (160, 125), D(0)) +
          say(510, 50, "¿Hipoxantina? Vení…|¡Ay, me trabaste!", (475, 120), D(1)) +
-         N(nuc(330, 310, R=20) + nuc(440, 310, "k-xan", (("C6", "O"), ("C2", "O")), R=20), D(2) - .3) +
+         N(nuc(310, 300, R=20, name="hipoxantina") + nuc(440, 300, "k-xan", (("C6", "O"), ("C2", "O")), R=20, name="xantina"), D(2) - .3) +
          say(510, 280, "Nosotras somos más solubles:|salimos sin hacer cristales.", (480, 305), D(2)))
     F.append(frame(b, "Alopurinol", "El alopurinol", "El <b>alopurinol</b> es un análogo de la hipoxantina e <b>inhibe la xantina oxidasa</b>. Se forma menos ácido úrico y quedan hipoxantina y xantina, que son más solubles.", 3))
     broken = (enzyme(600, 230, "HGPRT (falla)", k="k-off", mood="sad") +
