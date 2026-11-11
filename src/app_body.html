@@ -118,6 +118,20 @@
 @keyframes anPulse{50%{opacity:.25}}
 @media (prefers-reduced-motion:reduce){.anim .fr.on .new,.anim .fr.on .mv,.anim .fr.on .out,.anim .fr.on .grow,.anim .fr.on .pulse{animation-duration:.01s;animation-delay:0s}}
 /*/ANIMCSS*/
+/*N2SCSS*/
+.n2fig{padding:8px;margin:16px 0}
+.n2fig svg{width:100%;height:auto;max-height:none;display:block;background:var(--sunk);border-radius:12px}
+.n2fig figcaption{font-size:.88rem;color:var(--muted);padding:8px 4px 0}
+.anim .pan{fill:var(--panel);stroke:var(--line);stroke-width:2}
+.anim .pan2{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.5}
+.anim .pan3{fill:var(--ok-soft);stroke:var(--ok);stroke-width:1.5}
+.anim .ttl-a{font:800 16px var(--display);fill:var(--t-n);letter-spacing:.04em}
+.anim .ttl-b{font:800 16px var(--display);fill:var(--t-l);letter-spacing:.04em}
+.anim .nd{fill:var(--panel);stroke:var(--ink);stroke-width:1.6}.anim .nd.hot{fill:var(--accent-soft);stroke:var(--accent)}
+.anim .inh{fill:none;stroke:var(--bad);stroke-width:2;stroke-dasharray:6 5}
+.anim .arrb{stroke:var(--warn);stroke-width:2.4}.anim .arrbh{fill:var(--warn)}
+/*/N2SCSS*/
+
 /*PHASECSS*/
 .anim .ph-pre{--pc:var(--muted)}.anim .ph-prep{--pc:var(--muted)}.anim .ph-ini{--pc:var(--t-l)}.anim .ph-elo{--pc:var(--t-g2)}
 .anim .ph-ter{--pc:var(--oxy)}.anim .ph-res{--pc:var(--ok)}.anim .ph-euk{--pc:var(--t-n)}.anim .ph-pro{--pc:var(--t-gc)}
@@ -216,7 +230,7 @@ h1 .xp,h2 .xp,h3 .xp,h4 .xp{font-family:var(--body);font-weight:500}
 <nav class="nav"><div class="in gut">
   <button class="brand" type="button" data-go="inicio">QB <span>promo</span></button>
   <div class="tabs" id="tabs">
-    <a class="tab" href="#g1">Glúcidos I</a><a class="tab" href="#g2">Glúcidos II</a><a class="tab" href="#l1">Lípidos I</a><a class="tab" href="#l2">Lípidos II</a><a class="tab" href="#n1">Ác. nucleicos I</a><a class="tab" href="#n2">Ác. nucleicos II</a><a class="tab" href="#abrev">Abreviaturas</a><a class="tab" href="#panel">Mi progreso</a>
+    <a class="tab" href="#g1">Glúcidos I</a><a class="tab" href="#g2">Glúcidos II</a><a class="tab" href="#l1">Lípidos I</a><a class="tab" href="#l2">Lípidos II</a><a class="tab" href="#n1">Ác. nucleicos I</a><a class="tab" href="#n2">Ác. nucleicos II</a><a class="tab" href="#n2s">Ác. nucleicos II · simple</a><a class="tab" href="#abrev">Abreviaturas</a><a class="tab" href="#panel">Mi progreso</a>
   </div>
   <button class="go" type="button" data-go="preguntas">Preguntas</button>
 </div></nav>
@@ -279,8 +293,8 @@ h1 .xp,h2 .xp,h3 .xp,h4 .xp{font-family:var(--body);font-weight:500}
 
 <script>
 /*__DATA__*/
-const TOPICS={G1:{name:"Glúcidos: estructura",c:"--t-g1",mod:"g1"},G2:{name:"Análisis de glicanos",c:"--t-g2",mod:"g2"},GC:{name:"Cálculos de glúcidos",c:"--t-gc",mod:"g2"},L:{name:"Lípidos y membranas",c:"--t-l",mod:"l1"},N:{name:"Ácidos nucleicos: estructura",c:"--t-n",mod:"n1"},NM:{name:"Información genética y nucleótidos",c:"--t-nm",mod:"n2"}};
-const MODS=[["g1","Glúcidos I","Estructura, derivados, disacáridos, polisacáridos y GAG","--t-g1"],["g2","Glúcidos II","Glicoconjugados y análisis de glicanos · metabolismo marcado «¿entra?»","--t-g2"],["l1","Lípidos I","Ácidos grasos, clasificación, membranas","--t-l"],["l2","Lípidos II · ¿entra?","Lipoproteínas, β-oxidación, síntesis, cuerpos cetónicos (no está en los Powers)","--t-lm"],["n1","Ácidos nucleicos I","Componentes, experimentos, doble hélice, Tm","--t-n"],["n2","Ácidos nucleicos II","Replicación, transcripción, traducción, nucleótidos","--t-nm"]];
+const TOPICS={G1:{name:"Glúcidos: estructura",c:"--t-g1",mod:"g1"},G2:{name:"Análisis de glicanos",c:"--t-g2",mod:"g2"},GC:{name:"Cálculos de glúcidos",c:"--t-gc",mod:"g2"},L:{name:"Lípidos y membranas",c:"--t-l",mod:"l1"},N:{name:"Ácidos nucleicos: estructura",c:"--t-n",mod:"n1"},NM:{name:"Ác. nucleicos II (lo que entra)",c:"--t-nm",mod:"n2s"}};
+const MODS=[["g1","Glúcidos I","Estructura, derivados, disacáridos, polisacáridos y GAG","--t-g1"],["g2","Glúcidos II","Glicoconjugados y análisis de glicanos · metabolismo marcado «¿entra?»","--t-g2"],["l1","Lípidos I","Ácidos grasos, clasificación, membranas","--t-l"],["l2","Lípidos II · ¿entra?","Lipoproteínas, β-oxidación, síntesis, cuerpos cetónicos (no está en los Powers)","--t-lm"],["n1","Ácidos nucleicos I","Componentes, experimentos, doble hélice, Tm","--t-n"],["n2","Ácidos nucleicos II","Versión completa: replicación, transcripción, traducción, nucleótidos","--t-nm"],["n2s","Ácidos nucleicos II · simple","Solo lo que entra, explicado simple. El cuestionario sale de acá","--t-nm"]];
 const MODES={all:"Todas",new:"Sin responder",wrong:"Para repasar (mal o no sé)"};
 const NS=-1;
 const KEY="qb-promo-v4";
@@ -369,11 +383,11 @@ document.addEventListener("click",e=>{
     st.addEventListener("pointerup",e=>{if(x0===null)return;const dx=e.clientX-x0;x0=null;
       if(Math.abs(dx)>45){show(i+(dx<0?1:-1));if(!playing)stop()}});
   }
-  document.querySelectorAll(".anim").forEach(setup);
+  document.querySelectorAll(".anim[data-anim]").forEach(setup);
   addEventListener("hashchange",()=>all.forEach(o=>o.stop()));
 })();
 /* ---------- navegación ---------- */
-const VIEWS=["inicio","abrev","panel","g1","g2","l1","l2","n1","n2"];
+const VIEWS=["inicio","abrev","panel","g1","g2","l1","l2","n1","n2","n2s"];
 $("modcards").innerHTML=MODS.map(([id,t,d,c])=>`<button class="mcard" type="button" data-go="${id}" style="--c:var(${c})"><b>${t}</b><span>${d}</span></button>`).join("");
 document.querySelectorAll(".mod").forEach(s=>{const t=s.dataset.topics;if(!t){s.insertAdjacentHTML("beforeend",`<div class="practice"><p>Este módulo no tiene preguntas en el banco porque no se sabe si entra.</p></div>`);return}s.insertAdjacentHTML("beforeend",`<div class="practice"><p>¿Listo para practicar este módulo?</p><button class="go" type="button" data-practice="${t}">Practicar ${esc(s.querySelector("h1").textContent.split("·")[0].trim())}</button></div>`)});
 let lastView="inicio";

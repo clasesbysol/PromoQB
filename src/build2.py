@@ -1,5 +1,5 @@
 head=open('app_head.html').read(); body=open('app_body.html').read()
-theory=open('t_g.html').read()+open('t_l.html').read()+open('t_n.html').read()
+theory=open('t_g.html').read()+open('t_l.html').read()+open('t_n.html').read()+open('t_n2s.html').read()
 data=open('mols.js').read()+open('f51.js').read()+open('abbr.js').read()+open('bank.js').read()
 page=(head+body).replace('/*__THEORY__*/',theory).replace('/*__DATA__*/',data)
 open('promocional-qb.html','w').write(page)
